@@ -7,16 +7,9 @@ public class Application {
 	public static void main(String[] args) throws Exception {
 		
 		TestClass testObjClass = new TestClass();
-		testObjClass.testSendingQueueMessage();
+//		testObjClass.testSendingQueueMessage();
+		testObjClass.testSendingQueueMessage2();
 		
-		/* sending message to Queue 1.1
-		Application app = new Application();
-		QueueConnectionFactory cf = app.createQueueConnectionFactory();
-		QueueConnection conn = app.createQueueConnection(cf);
-		QueueSession session = app.createQueueSession(conn);
-		app.sendTextMessageToQueue("Another Message", session);
-		session.close();
-		conn.close(); */
 		
 		/* sending message to Topic 2 
 		Application app = new Application();
