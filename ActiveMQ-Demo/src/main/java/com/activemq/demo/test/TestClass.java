@@ -23,7 +23,7 @@ public class TestClass {
 		ConnectionFactory cf = connectionFactoryObj.createConnectionFactory();
 		Connection conn = connectionConfObj.createConnection(cf);
 		Session session = sessionConfObj.createSession(conn);
-		sendMessageObj.sendTextMessageToQueue("Nana Test Message", session);
+		sendMessageObj.sendTextMessageToQueue("Hello Nana!", session);
 		session.close();
 		conn.close();
 	}
