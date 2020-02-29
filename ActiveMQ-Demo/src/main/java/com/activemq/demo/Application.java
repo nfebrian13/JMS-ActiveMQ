@@ -19,6 +19,7 @@ import javax.jms.TopicConnection;
 import javax.jms.TopicConnectionFactory;
 import javax.jms.TopicPublisher;
 import javax.jms.TopicSession;
+import javax.jms.TopicSubscriber;
 import javax.jms.XAConnection;
 import javax.jms.XAConnectionFactory;
 import javax.jms.XAQueueConnection;
@@ -172,6 +173,15 @@ public class Application {
 		return consumer;
 	}
 	
+	/* Consume Topic Durable subscription  */
+	public TopicSubscriber consumeFromTopicDurableSubsription(Session session, String destination, MessageListener messageListener) 
+			throws JMSException {
+		Topic topic = session.createTopic(destination);
+		TopicSubscriber consumer = session.createDurableSubscriber(topic,"test-subsription");
+		consumer.setMessageListener(messageListener);
+		return consumer;
+	}
+	
 
 	/* Main Class */
 	public static void main(String[] args) throws Exception {
@@ -240,7 +250,7 @@ public class Application {
 		}); */
 		
 		
-		/* consuming queue message Topic */
+		/* consuming queue message Topic 
 		MessageListener message = null;
 		Application app = new Application();
 		ConnectionFactory cf = app.createConnectionFactory();
@@ -260,6 +270,47 @@ public class Application {
 					consumer.close();
 					session.close();
 					conn.close();
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+				}
+			}
+		});  */
+		
+		/* consuming topic message durable subscription  */
+		Application app = new Application();
+		ConnectionFactory cf = app.createConnectionFactory();
+		final Connection conn = app.createConnection(cf);
+		conn.setClientID("MyUniqueClientId");
+		final Session session = app.createSession(conn);
+		final TopicSubscriber topicSubscriber = 
+				app.consumeFromTopicDurableSubsription(session,"TEST_TOPIC", (message -> {
+					if (message  instanceof TextMessage) {
+						TextMessage txtMessage = (TextMessage) message;
+						try {
+							System.out.println(txtMessage.getText());
+						} catch (JMSException e) {
+							// TODO: handle exception
+							e.printStackTrace();
+						}
+					}
+				}));
+				
+		conn.start();
+		
+		// Free resources
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				try {
+					super.run();
+					conn.stop();
+					topicSubscriber.close();
+					session.close();
+					conn.close();
+					
+					// if you are finished with subscription
+					session.unsubscribe("test-subsription");
 				} catch (Exception e) {
 					// TODO: handle exception
 					e.printStackTrace();
