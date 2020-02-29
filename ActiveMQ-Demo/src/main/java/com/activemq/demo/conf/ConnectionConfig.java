@@ -19,9 +19,8 @@ import javax.jms.XATopicConnectionFactory;
  * 
  *  */
 
-public class ConnectionConf {
+public class ConnectionConfig {
 	
-
 	public Connection createConnection(ConnectionFactory cf) 
 			throws JMSException {
 		return cf.createConnection();

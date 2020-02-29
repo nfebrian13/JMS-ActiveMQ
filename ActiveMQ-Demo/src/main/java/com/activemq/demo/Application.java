@@ -1,26 +1,13 @@
 package com.activemq.demo;
 
-import javax.jms.JMSException;
-import javax.jms.MessageConsumer;
-import javax.jms.MessageListener;
-import javax.jms.Queue;
-import javax.jms.Session;
-import javax.jms.Topic;
-import javax.jms.TopicSubscriber;
+import com.activemq.demo.test.TestClass;
 
 public class Application {
 
-	/* Main Class */
 	public static void main(String[] args) throws Exception {
 		
-		/* sending message to Queue 1
-		Application app = new Application();
-		ConnectionFactory cf = app.createConnectionFactory();
-		Connection conn = app.createConnection(cf);
-		Session session = app.createSession(conn);
-		app.sendTextMessageToQueue("Test Message", session);
-		session.close();
-		conn.close(); */
+		TestClass testObjClass = new TestClass();
+		testObjClass.testSendingQueueMessage();
 		
 		/* sending message to Queue 1.1
 		Application app = new Application();

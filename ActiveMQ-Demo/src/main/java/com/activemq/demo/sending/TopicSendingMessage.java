@@ -13,7 +13,7 @@ public class TopicSendingMessage {
 	
 	/* Sending message to topic 2 */
 	public void sendTextMessageToTopic(String message, Session session) throws JMSException {
-		Topic topic = session.createTopic("TEST_TOPIC");
+		Topic topic = session.createTopic("NANA_TEST_TOPIC");
 		TextMessage msg = session.createTextMessage(message);
 		MessageProducer messageProducer = session.createProducer(topic);
 		messageProducer.send(msg);
@@ -21,7 +21,7 @@ public class TopicSendingMessage {
 
 	/* Sending message to topic 2.1 */
 	public void sendTextMessageToTopic(String message, TopicSession session) throws JMSException {
-		Topic topic = session.createTopic("TEST_TOPIC");
+		Topic topic = session.createTopic("NANA_TEST_TOPIC");
 		TextMessage msg = session.createTextMessage(message);
 		TopicPublisher topicPublisher = session.createPublisher(topic);
 		topicPublisher.send(msg);
@@ -29,7 +29,7 @@ public class TopicSendingMessage {
 	
 	/* Sending message to topic 2.2 (priorities) */
 	public void sendTextMessageToTopicPriorities(String message, Session session) throws JMSException {
-		Topic topic = session.createTopic("TEST_TOPIC");
+		Topic topic = session.createTopic("NANA_TEST_TOPIC");
 		TextMessage msg = session.createTextMessage(message);
 		MessageProducer messageProducer = session.createProducer(topic);
 		messageProducer.setPriority(9); // 0-9, 9 Highest, all messages, 4 default
