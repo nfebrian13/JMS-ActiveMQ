@@ -2,6 +2,7 @@ package com.activemq.demo;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
+import javax.jms.DeliveryMode;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
@@ -143,6 +144,18 @@ public class Application {
 		TextMessage msg = session.createTextMessage(message);
 		TopicPublisher topicPublisher = session.createPublisher(topic);
 		topicPublisher.send(msg);
+	}
+	
+	/* Sending message to topic 2.2 (priorities) */
+	public void sendTextMessageToTopicPriorities(String message, Session session) throws JMSException {
+		Topic topic = session.createTopic("TEST_TOPIC");
+		TextMessage msg = session.createTextMessage(message);
+		MessageProducer messageProducer = session.createProducer(topic);
+		messageProducer.setPriority(9); // 0-9, 9 Highest, all messages, 4 default
+		messageProducer.setTimeToLive(1000);// milisecon, 0 default - doesnt expire
+		messageProducer.send(msg, DeliveryMode.NON_PERSISTENT,
+				9, // priority
+				20000); // time to live
 	}
 	
 	/* Consume Queue Destination  */
