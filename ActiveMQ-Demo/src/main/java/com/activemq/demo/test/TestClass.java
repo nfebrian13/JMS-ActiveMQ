@@ -3,6 +3,8 @@ package com.activemq.demo.test;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
+import javax.jms.MessageConsumer;
+import javax.jms.MessageListener;
 import javax.jms.QueueConnection;
 import javax.jms.QueueConnectionFactory;
 import javax.jms.QueueSession;
@@ -14,6 +16,8 @@ import javax.jms.TopicSession;
 import com.activemq.demo.conf.ConnectionConfig;
 import com.activemq.demo.conf.ConnectionFactories;
 import com.activemq.demo.conf.SessionConfig;
+import com.activemq.demo.consume.QueueConsume;
+import com.activemq.demo.consume.TopicConsume;
 import com.activemq.demo.sending.QueueSendingMessage;
 import com.activemq.demo.sending.TopicSendingMessage;
 
@@ -22,9 +26,12 @@ public class TestClass {
 	ConnectionFactories connectionFactoryObj = new ConnectionFactories();
 	ConnectionConfig connectionConfObj = new ConnectionConfig();
 	SessionConfig sessionConfObj = new SessionConfig();
+	
 	QueueSendingMessage sendQueueMessageObj = new QueueSendingMessage();
 	TopicSendingMessage sendTopicMessageObj = new TopicSendingMessage();
 	
+	QueueConsume queueConsumeMessageObj = new QueueConsume();
+	TopicConsume topicConsumeMessageObj = new TopicConsume();
 	
 	public void testSendingQueueMessage() throws JMSException {
 		/* sending message to Queue 1  */
@@ -66,60 +73,62 @@ public class TestClass {
 		conn.close(); 
 	}
 	
-	/* consuming queue message 
-	MessageListener message = null;
-	Application app = new Application();
-	ConnectionFactory cf = app.createConnectionFactory();
-	final Connection conn = app.createConnection(cf);
-	final Session session = app.createSession(conn);
-	final MessageConsumer consumer = app.consumeFromDestination(session,"TEST_DESTINATION", message);
-	System.out.println("haha " + consumer.toString());
-	conn.start();
-	
-	// Free resources
-	Runtime.getRuntime().addShutdownHook(new Thread() {
-		@Override
-		public void run() {
-			try {
-				super.run();
-				conn.stop();
-				consumer.close();
-				session.close();
-				conn.close();
-			} catch (Exception e) {
-				// TODO: handle exception
-				e.printStackTrace();
+	public void testConsumingQueueMessage() throws JMSException {
+		/* consuming queue message */
+		MessageListener message = null;
+		ConnectionFactory cf = connectionFactoryObj.createConnectionFactory();
+		final Connection conn = connectionConfObj.createConnection(cf);
+		final Session session = sessionConfObj.createSession(conn);
+		final MessageConsumer consumer = queueConsumeMessageObj.consumeFromQueue(session,"NANA_DESTINATION", message);
+		System.out.println("haha " + consumer.toString());
+		conn.start();
+		
+		// Free resources
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				try {
+					super.run();
+					conn.stop();
+					consumer.close();
+					session.close();
+					conn.close();
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+				}
 			}
-		}
-	}); */
+		}); 
+	}
 	
-	
-	/* consuming queue message Topic 
-	MessageListener message = null;
-	Application app = new Application();
-	ConnectionFactory cf = app.createConnectionFactory();
-	final Connection conn = app.createConnection(cf);
-	final Session session = app.createSession(conn);
-	final MessageConsumer consumer = app.consumeFromTopic(session,"TEST_TOPIC", message);
-	System.out.println("Topic is: " + consumer.toString());
-	conn.start();
-	
-	// Free resources
-	Runtime.getRuntime().addShutdownHook(new Thread() {
-		@Override
-		public void run() {
-			try {
-				super.run();
-				conn.stop();
-				consumer.close();
-				session.close();
-				conn.close();
-			} catch (Exception e) {
-				// TODO: handle exception
-				e.printStackTrace();
+	public void testConsumingTopicMessage() throws JMSException {
+		/* consuming queue message Topic */
+		MessageListener message = null;
+		ConnectionFactory cf = connectionFactoryObj.createConnectionFactory();
+		final Connection conn = connectionConfObj.createConnection(cf);
+		final Session session = sessionConfObj.createSession(conn);
+		final MessageConsumer consumer = topicConsumeMessageObj.consumeFromTopic(session,"NANA_TEST_TOPIC", message);
+		System.out.println("Topic is: " + consumer.toString());
+		conn.start();
+		
+		// Free resources
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				try {
+					super.run();
+					conn.stop();
+					consumer.close();
+					session.close();
+					conn.close();
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+				}
 			}
-		}
-	});  */
+		});  
+	}
+	
 	
 	/* consuming topic message durable subscription  
 	Application app = new Application();

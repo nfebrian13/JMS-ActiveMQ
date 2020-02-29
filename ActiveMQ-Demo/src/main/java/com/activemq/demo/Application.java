@@ -10,7 +10,9 @@ public class Application {
 //		testObjClass.testSendingQueueMessage();
 //		testObjClass.testSendingQueueMessage2();
 //		testObjClass.testSendingTopicMessage();
-		testObjClass.testSendingTopicMessage2();
+//		testObjClass.testSendingTopicMessage2();
 		
+//		testObjClass.testConsumingQueueMessage();
+		testObjClass.testConsumingTopicMessage();
 	}
 }
