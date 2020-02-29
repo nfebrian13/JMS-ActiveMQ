@@ -145,7 +145,7 @@ public class Application {
 	}
 	
 	/* Consume Queue Destination  */
-	public MessageConsumer consumeFromDestination(Session session, String destination, MessageListener messageListener) 
+	public MessageConsumer consumeFromQueue(Session session, String destination, MessageListener messageListener) 
 			throws JMSException {
 		Queue queue = session.createQueue(destination);
 		MessageConsumer consumer = session.createConsumer(queue);
@@ -163,15 +163,13 @@ public class Application {
 		} */
 	}
 	
-	/* Consume Destination  */
+	/* Consume Topic Destination  */
 	public MessageConsumer consumeFromTopic(Session session, String destination, MessageListener messageListener) 
 			throws JMSException {
 		Topic topic = session.createTopic(destination);
 		MessageConsumer consumer = session.createConsumer(topic);
 		consumer.setMessageListener(messageListener);
 		return consumer;
-		
-
 	}
 	
 
@@ -248,8 +246,8 @@ public class Application {
 		ConnectionFactory cf = app.createConnectionFactory();
 		final Connection conn = app.createConnection(cf);
 		final Session session = app.createSession(conn);
-		final MessageConsumer consumer = app.consumeFromDestination(session,"TEST_DESTINATION", message);
-		System.out.println("haha " + consumer.toString());
+		final MessageConsumer consumer = app.consumeFromTopic(session,"TEST_TOPIC", message);
+		System.out.println("Topic is: " + consumer.toString());
 		conn.start();
 		
 		// Free resources
