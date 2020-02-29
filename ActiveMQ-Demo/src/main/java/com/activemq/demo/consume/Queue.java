@@ -1,4 +1,4 @@
-package com.activemq.demo.consume;
+package com.activemq.demo.receive;
 
 public class Queue {
 
