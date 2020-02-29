@@ -3,6 +3,9 @@ package com.activemq.demo;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageConsumer;
+import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.Queue;
 import javax.jms.QueueConnection;
@@ -141,7 +144,36 @@ public class Application {
 		topicPublisher.send(msg);
 	}
 	
+	/* Consume Queue Destination  */
+	public MessageConsumer consumeFromDestination(Session session, String destination, MessageListener messageListener) 
+			throws JMSException {
+		Queue queue = session.createQueue(destination);
+		MessageConsumer consumer = session.createConsumer(queue);
+		consumer.setMessageListener(messageListener);
+		return consumer;
+		
+		/* belum digunakan 
+		boolean someCondition = true;
+		while (someCondition) {
+			Message message = consumer.receive(500);
+			if (null != message) {
+				// Do Something With Message
+				
+			}
+		} */
+	}
+	
 	/* Consume Destination  */
+	public MessageConsumer consumeFromTopic(Session session, String destination, MessageListener messageListener) 
+			throws JMSException {
+		Topic topic = session.createTopic(destination);
+		MessageConsumer consumer = session.createConsumer(topic);
+		consumer.setMessageListener(messageListener);
+		return consumer;
+		
+
+	}
+	
 
 	/* Main Class */
 	public static void main(String[] args) throws Exception {
@@ -173,14 +205,69 @@ public class Application {
 		session.close();
 		conn.close();  */
 		
-		/* sending message to Topic 2.1 */
+		/* sending message to Topic 2.1 
 		Application app = new Application();
 		TopicConnectionFactory cf = app.createTopicConnectionFactory();
 		TopicConnection conn = app.createTopicConnection(cf);
 		TopicSession session = app.createTopicSession(conn);
 		app.sendTextMessageToTopic("Another Message", session);
 		session.close();
-		conn.close();  
+		conn.close();  */
+		
+		/* consuming queue message 
+		MessageListener message = null;
+		Application app = new Application();
+		ConnectionFactory cf = app.createConnectionFactory();
+		final Connection conn = app.createConnection(cf);
+		final Session session = app.createSession(conn);
+		final MessageConsumer consumer = app.consumeFromDestination(session,"TEST_DESTINATION", message);
+		System.out.println("haha " + consumer.toString());
+		conn.start();
+		
+		// Free resources
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				try {
+					super.run();
+					conn.stop();
+					consumer.close();
+					session.close();
+					conn.close();
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+				}
+			}
+		}); */
+		
+		
+		/* consuming queue message Topic */
+		MessageListener message = null;
+		Application app = new Application();
+		ConnectionFactory cf = app.createConnectionFactory();
+		final Connection conn = app.createConnection(cf);
+		final Session session = app.createSession(conn);
+		final MessageConsumer consumer = app.consumeFromDestination(session,"TEST_DESTINATION", message);
+		System.out.println("haha " + consumer.toString());
+		conn.start();
+		
+		// Free resources
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				try {
+					super.run();
+					conn.stop();
+					consumer.close();
+					session.close();
+					conn.close();
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+				}
+			}
+		}); 
 		
 	}
 }
