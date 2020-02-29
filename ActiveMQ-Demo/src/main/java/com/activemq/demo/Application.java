@@ -13,6 +13,8 @@ public class Application {
 //		testObjClass.testSendingTopicMessage2();
 		
 //		testObjClass.testConsumingQueueMessage();
-		testObjClass.testConsumingTopicMessage();
+//		testObjClass.testConsumingTopicMessage();
+	
+		testObjClass.testConsumingDurableSubsMessage();
 	}
 }
