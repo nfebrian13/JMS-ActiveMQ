@@ -7,11 +7,14 @@ import javax.jms.MessageProducer;
 import javax.jms.Queue;
 import javax.jms.QueueConnection;
 import javax.jms.QueueConnectionFactory;
+import javax.jms.QueueSender;
 import javax.jms.QueueSession;
 import javax.jms.Session;
 import javax.jms.TextMessage;
+import javax.jms.Topic;
 import javax.jms.TopicConnection;
 import javax.jms.TopicConnectionFactory;
+import javax.jms.TopicPublisher;
 import javax.jms.TopicSession;
 import javax.jms.XAConnection;
 import javax.jms.XAConnectionFactory;
@@ -72,11 +75,11 @@ public class Application {
 		return cf.createXAQueueConnection();
 	}
 
-	public TopicConnection createTopicQueueConnection(TopicConnectionFactory cf) throws JMSException {
+	public TopicConnection createTopicConnection(TopicConnectionFactory cf) throws JMSException {
 		return cf.createTopicConnection();
 	}
 
-	public XATopicConnection createXATopicQueueConnection(XATopicConnectionFactory cf) throws JMSException {
+	public XATopicConnection createXATopicConnection(XATopicConnectionFactory cf) throws JMSException {
 		return cf.createXATopicConnection();
 	}
 
@@ -98,29 +101,86 @@ public class Application {
 		return connection.createXAQueueSession();
 	}
 
-	public TopicSession createQueueSession(TopicConnection connection) throws JMSException {
+	public TopicSession createTopicSession(TopicConnection connection) throws JMSException {
 		return connection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
 	}
 
-	public XATopicSession createXAQueueSession(XATopicConnection connection) throws JMSException {
+	public XATopicSession createXATopicSession(XATopicConnection connection) throws JMSException {
 		return connection.createXATopicSession();
 	}
 
-	/* Sending message to queue */
+	/* Sending message to queue 1 */
 	public void sendTextMessageToQueue(String message, Session session) throws JMSException {
 		Queue queue = session.createQueue("TEST_DESTINATION");
 		TextMessage msg = session.createTextMessage(message);
 		MessageProducer messageProducer = session.createProducer(queue);
 		messageProducer.send(msg);
 	}
+	
+	/* Sending message to queue 1.1 */
+	public void sendTextMessageToQueue(String message, QueueSession session) throws JMSException {
+		Queue queue = session.createQueue("TEST_DESTINATION");
+		TextMessage msg = session.createTextMessage(message);
+		QueueSender messageProducer = session.createSender(queue);
+		messageProducer.send(msg);
+	}
+	
+	/* Sending message to topic 2 */
+	public void sendTextMessageToTopic(String message, Session session) throws JMSException {
+		Topic topic = session.createTopic("TEST_TOPIC");
+		TextMessage msg = session.createTextMessage(message);
+		MessageProducer messageProducer = session.createProducer(topic);
+		messageProducer.send(msg);
+	}
+	
+	/* Sending message to topic 2.1 */
+	public void sendTextMessageToTopic(String message, TopicSession session) throws JMSException {
+		Topic topic = session.createTopic("TEST_TOPIC");
+		TextMessage msg = session.createTextMessage(message);
+		TopicPublisher topicPublisher = session.createPublisher(topic);
+		topicPublisher.send(msg);
+	}
+	
+	/* Consume Destination  */
 
+	/* Main Class */
 	public static void main(String[] args) throws Exception {
+		
+		/* sending message to Queue 1
 		Application app = new Application();
 		ConnectionFactory cf = app.createConnectionFactory();
 		Connection conn = app.createConnection(cf);
 		Session session = app.createSession(conn);
 		app.sendTextMessageToQueue("Test Message", session);
 		session.close();
-		conn.close();
+		conn.close(); */
+		
+		/* sending message to Queue 1.1
+		Application app = new Application();
+		QueueConnectionFactory cf = app.createQueueConnectionFactory();
+		QueueConnection conn = app.createQueueConnection(cf);
+		QueueSession session = app.createQueueSession(conn);
+		app.sendTextMessageToQueue("Another Message", session);
+		session.close();
+		conn.close(); */
+		
+		/* sending message to Topic 2 
+		Application app = new Application();
+		ConnectionFactory cf = app.createConnectionFactory();
+		Connection conn = app.createConnection(cf);
+		Session session = app.createSession(conn);
+		app.sendTextMessageToTopic("Test Message", session);
+		session.close();
+		conn.close();  */
+		
+		/* sending message to Topic 2.1 */
+		Application app = new Application();
+		TopicConnectionFactory cf = app.createTopicConnectionFactory();
+		TopicConnection conn = app.createTopicConnection(cf);
+		TopicSession session = app.createTopicSession(conn);
+		app.sendTextMessageToTopic("Another Message", session);
+		session.close();
+		conn.close();  
+		
 	}
 }
