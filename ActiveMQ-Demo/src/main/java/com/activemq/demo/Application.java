@@ -3,10 +3,13 @@ package com.activemq.demo;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
+import javax.jms.MessageProducer;
+import javax.jms.Queue;
 import javax.jms.QueueConnection;
 import javax.jms.QueueConnectionFactory;
 import javax.jms.QueueSession;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 import javax.jms.TopicConnection;
 import javax.jms.TopicConnectionFactory;
 import javax.jms.TopicSession;
@@ -103,4 +106,21 @@ public class Application {
 		return connection.createXATopicSession();
 	}
 
+	/* Sending message to queue */
+	public void sendTextMessageToQueue(String message, Session session) throws JMSException {
+		Queue queue = session.createQueue("TEST_DESTINATION");
+		TextMessage msg = session.createTextMessage(message);
+		MessageProducer messageProducer = session.createProducer(queue);
+		messageProducer.send(msg);
+	}
+
+	public static void main(String[] args) throws Exception {
+		Application app = new Application();
+		ConnectionFactory cf = app.createConnectionFactory();
+		Connection conn = app.createConnection(cf);
+		Session session = app.createSession(conn);
+		app.sendTextMessageToQueue("Test Message", session);
+		session.close();
+		conn.close();
+	}
 }
