@@ -1,85 +1,14 @@
 package com.activemq.demo;
 
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.DeliveryMode;
 import javax.jms.JMSException;
-import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
-import javax.jms.MessageProducer;
 import javax.jms.Queue;
-import javax.jms.QueueConnection;
-import javax.jms.QueueConnectionFactory;
-import javax.jms.QueueSender;
-import javax.jms.QueueSession;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 import javax.jms.Topic;
-import javax.jms.TopicConnection;
-import javax.jms.TopicConnectionFactory;
-import javax.jms.TopicPublisher;
-import javax.jms.TopicSession;
 import javax.jms.TopicSubscriber;
-import javax.jms.XAConnection;
-import javax.jms.XAConnectionFactory;
-import javax.jms.XAQueueConnection;
-import javax.jms.XAQueueConnectionFactory;
-import javax.jms.XAQueueSession;
-import javax.jms.XASession;
-import javax.jms.XATopicConnection;
-import javax.jms.XATopicConnectionFactory;
-import javax.jms.XATopicSession;
-
-import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.activemq.ActiveMQXAConnectionFactory;
 
 public class Application {
-
-
-	/* Sending message to queue 1 */
-	public void sendTextMessageToQueue(String message, Session session) throws JMSException {
-		Queue queue = session.createQueue("TEST_DESTINATION");
-		TextMessage msg = session.createTextMessage(message);
-		MessageProducer messageProducer = session.createProducer(queue);
-		messageProducer.send(msg);
-	}
-	
-	/* Sending message to queue 1.1 */
-	public void sendTextMessageToQueue(String message, QueueSession session) throws JMSException {
-		Queue queue = session.createQueue("TEST_DESTINATION");
-		TextMessage msg = session.createTextMessage(message);
-		QueueSender messageProducer = session.createSender(queue);
-		messageProducer.send(msg);
-	}
-	
-	/* Sending message to topic 2 */
-	public void sendTextMessageToTopic(String message, Session session) throws JMSException {
-		Topic topic = session.createTopic("TEST_TOPIC");
-		TextMessage msg = session.createTextMessage(message);
-		MessageProducer messageProducer = session.createProducer(topic);
-		messageProducer.send(msg);
-	}
-	
-	/* Sending message to topic 2.1 */
-	public void sendTextMessageToTopic(String message, TopicSession session) throws JMSException {
-		Topic topic = session.createTopic("TEST_TOPIC");
-		TextMessage msg = session.createTextMessage(message);
-		TopicPublisher topicPublisher = session.createPublisher(topic);
-		topicPublisher.send(msg);
-	}
-	
-	/* Sending message to topic 2.2 (priorities) */
-	public void sendTextMessageToTopicPriorities(String message, Session session) throws JMSException {
-		Topic topic = session.createTopic("TEST_TOPIC");
-		TextMessage msg = session.createTextMessage(message);
-		MessageProducer messageProducer = session.createProducer(topic);
-		messageProducer.setPriority(9); // 0-9, 9 Highest, all messages, 4 default
-		messageProducer.setTimeToLive(1000);// milisecon, 0 default - doesnt expire
-		messageProducer.send(msg, DeliveryMode.NON_PERSISTENT,
-				9, // priority
-				20000); // time to live
-	}
 	
 	/* Consume Queue Destination  */
 	public MessageConsumer consumeFromQueue(Session session, String destination, MessageListener messageListener) 
